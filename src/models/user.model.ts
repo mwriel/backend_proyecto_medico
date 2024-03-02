@@ -7,7 +7,7 @@ const Users = new Schema<User,UserModel>({
         required: true,
         trim: true
     },
-    pass:{
+    password:{
         type: String,
         required: true,
         trim: true

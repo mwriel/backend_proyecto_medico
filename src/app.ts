@@ -1,6 +1,10 @@
 import express  from 'express'
 import mongoose/*, {type ConnectOptions}*/ from 'mongoose'
 
+import passport from 'passport'
+import './utils/auth'
+
+
 import { 
     logErrors,
     errorHandler,
@@ -13,9 +17,9 @@ import {config} from './config/config'
 const {mongoUri, port}= config
 const app = express()
 
-
-
 app.use(express.json())
+app.use(passport.initialize())
+
 
 routerApi(app)
 

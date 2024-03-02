@@ -1,11 +1,14 @@
 import express from "express"
 import MonsterService from '../services/monster.service'
 import { Monster } from '../types/monster.type'
-
+import passport from 'passport'
+import { UserRequestType } from "../types/user.type"
 const router= express.Router()
 const service=new MonsterService()
 
-router.post('/', async (req,res) => {
+router.post('/', 
+passport.authenticate('jwt',{session: false}),
+async (req,res) => {
 
     const monster: Monster =req.body;
     const newMonster =await service.create(monster)
@@ -13,8 +16,14 @@ router.post('/', async (req,res) => {
     res.status(201).json(newMonster)
 })//post /monster
 
-router.get('/', async (req,res,next) => {
+router.get('/', 
+passport.authenticate('jwt',{session: false}),
+async (req: UserRequestType,res,next) => {
     try{
+        const {user} =req
+        console.log('usuario sacado del request')
+        console.log(user)
+        console.log('------------------------')
         const monsters = await service.findAll()
         console.log(monsters)
         res.status(200).json(monsters)
@@ -22,7 +31,9 @@ router.get('/', async (req,res,next) => {
         next(error)
     }//try catch
 })//get /monster
-router.get('/:id', async (req,res,next)=>{
+router.get('/:id', 
+passport.authenticate('jwt',{session: false}),
+async (req,res,next)=>{
     console.log('id finding')
     try{
         const monster= await service.findById(req.params.id)
@@ -32,7 +43,9 @@ router.get('/:id', async (req,res,next)=>{
 
     }
 })
-router.get('/', async (req,res,next)=>{
+router.get('/', 
+passport.authenticate('jwt',{session: false}),
+async (req,res,next)=>{
     console.log('name finding')
     try{
         const monster= await service.findByName(req.query.name as string)

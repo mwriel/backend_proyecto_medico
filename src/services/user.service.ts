@@ -1,12 +1,21 @@
 import Users from "../models/user.model"
 import { User,UserModel } from "../types/user.type"
-import Boom from "@hapi/boom"
+import boom from "@hapi/boom"
+import bcrypt from 'bcrypt'
 
 class UserService{
     async create(user: User){
-        const newUser=await Users.create(user).catch((error) => {
+        const newUser=await Users.create({
+            ...user, 
+            //hashed password
+            password: await bcrypt.hash(user.password,10)
+        }).catch((error) => {
             console.log('couldn\'n create user',error)
         })
+        if (!newUser) {
+            throw boom.badRequest('Could not create user')
+        }
+        
         return newUser
     }
     async findAll(){
@@ -15,16 +24,16 @@ class UserService{
             console.log('error while conecting to mongo',error)
         })
         if(!users[0]){
-            throw Boom.notFound('there are no users ')
+            throw boom.notFound('there are no users ')
         }
         return users
     }
-    async findByEmail(email:string){
-        const user = await Users.find({email:email}).catch((error) => {
+    async findByEmail(email: string){
+        const user = await Users.findOne({email:email}).catch((error) => {
             console.log('error retirando info del usuario')
         })
         if(!user){
-            throw Boom.notFound('usuario no encontrado')
+            throw boom.notFound('usuario no encontrado')
         }
         return user
     }
@@ -33,7 +42,7 @@ class UserService{
             console.log('error en coneccion a mongo')
         })
         if(!user){
-            throw Boom.notFound('usuario no encontrado')
+            throw boom.notFound('usuario no encontrado')
         }
         return user
     }
@@ -42,7 +51,7 @@ class UserService{
             console.log('error en coneccion a mongo')
         })
         if(!user){
-            throw Boom.notFound('usuario no encontrado')
+            throw boom.notFound('usuario no encontrado')
         }
         return user
     }
