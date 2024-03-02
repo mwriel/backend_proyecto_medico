@@ -30,6 +30,11 @@ const Monsters = new Schema< Monster, MonsterModel>({
         type: String,
         required: true,
         trim: true
+    },
+    firtsGame:{
+        type: String,
+        required: false,
+        trim: true
     }
 
 })
