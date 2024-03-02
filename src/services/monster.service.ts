@@ -19,6 +19,25 @@ class MonsterService{
         }
         return monsters
     }
+    async findById(id:string){
+        const monster = await Monsters.findById(id).catch((error) => {
+            console.log('error en coneccion a mongo')
+        })
+        if(!monster){
+            throw Boom.notFound('monstruo no encontrado')
+        }
+        return monster
+    }
+    async findByName(name:string){
+        const monster = await Monsters.findOne({name: name}).catch((error) => {
+            console.log('error en coneccion a mongo')
+        })
+        if(!monster){
+            throw Boom.notFound('monstruo no encontrado')
+        }
+        return monster
+    }
 }
+
 
 export default MonsterService
