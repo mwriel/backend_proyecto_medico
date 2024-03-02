@@ -41,6 +41,6 @@ router.get('/', async (req,res,next)=>{
         next(error)
 
     }
-})
+})//get qyery /monsters/?name= 'name'
 
 export default router
