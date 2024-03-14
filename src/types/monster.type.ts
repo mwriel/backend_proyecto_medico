@@ -9,8 +9,6 @@ export type Monster = {
     lessWeak?: String
     size: Number
     body: String
-    //ToDo añadir juego por medio de servicios de find para el juego y cambiar te dipo strign a Game
-    firtsGame?: String
 
 }
 export type MonsterModel = Model<Monster>

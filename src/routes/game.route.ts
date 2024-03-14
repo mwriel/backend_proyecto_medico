@@ -8,21 +8,25 @@ const service=new GameService()
 
 router.post('/', 
 passport.authenticate('jwt',{session: false}),
-async (req,res) => {
-
+async (req: UserRequestType,res) => {
+    const monster=req.query.monster as string
+    const {user}=req
+    console.log('usuario sacado del request')
+        console.log(user)
+        console.log('------------------------')
     const game: Game =req.body;
-    const newGame =await service.create(game)
+    const newGame =await service.create(game,monster)
 
     res.status(201).json(newGame)
-})//post /monster
+})//post /games/?monster=monsterName
 
 router.get('/', 
 passport.authenticate('jwt',{session: false}),
 async (req: UserRequestType,res,next) => {
     try{
-        const {user} =req
+        const {user: sub} =req
         console.log('usuario sacado del request')
-        console.log(user)
+        console.log(sub)
         console.log('------------------------')
         const games = await service.findAll()
         console.log(games)
@@ -30,7 +34,7 @@ async (req: UserRequestType,res,next) => {
     } catch(error){
         next(error)
     }//try catch
-})//get /monster
+})//get /games
 router.get('/:id', 
 passport.authenticate('jwt',{session: false}),
 async (req,res,next)=>{
@@ -54,6 +58,6 @@ async (req,res,next)=>{
         next(error)
 
     }
-})//get qyery /monsters/?name= 'name'
+})//get qyery /games/?name= 'name'
 
 export default router

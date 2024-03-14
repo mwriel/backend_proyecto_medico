@@ -31,7 +31,7 @@ async (req: UserRequestType,res,next) => {
         next(error)
     }//try catch
 })//get /monster
-router.get('/:id', 
+router.get('/id/:id', 
 passport.authenticate('jwt',{session: false}),
 async (req,res,next)=>{
     console.log('id finding')
@@ -43,12 +43,15 @@ async (req,res,next)=>{
 
     }
 })
-router.get('/', 
+router.get('/name/', 
 passport.authenticate('jwt',{session: false}),
 async (req,res,next)=>{
     console.log('name finding')
     try{
+        console.log(req.query.name as string)
         const monster= await service.findByName(req.query.name as string)
+        const {_id}=monster
+        console.log(_id)
         res.status(200).json(monster)
     }catch(error){
         next(error)
