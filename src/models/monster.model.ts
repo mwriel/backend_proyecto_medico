@@ -1,6 +1,7 @@
 import { Schema, model } from "mongoose"
 import { Monster, MonsterModel } from "../types/monster.type"
 
+export const MONSTER_REFERENCE = 'Monster'
 const Monsters = new Schema< Monster, MonsterModel>({
     name: {
         type: String,
@@ -30,13 +31,9 @@ const Monsters = new Schema< Monster, MonsterModel>({
         type: String,
         required: true,
         trim: true
-    },
-    firtsGame:{
-        type: String,
-        required: false,
-        trim: true
     }
+    
 
 })
 
-export default model('Monster', Monsters)
+export default model(MONSTER_REFERENCE, Monsters)
