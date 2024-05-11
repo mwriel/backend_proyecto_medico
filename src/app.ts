@@ -12,14 +12,14 @@ import {
 } from './middlewares/error.handler'
 import routerApi from './routes'
 import {config} from './config/config'
-
+import cors from 'cors'
 
 const {mongoUri, port}= config
 const app = express()
 
 app.use(express.json())
 app.use(passport.initialize())
-
+app.use(cors())
 
 routerApi(app)
 

@@ -11,4 +11,5 @@ const routerApi = (app)=>{
     router.use('/auth',AuthRouter)
     router.use('/games',GameRouter)
 }
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWU5Y2E2YzZhNjhiNjMwOGZlMWVmZGIiLCJpYXQiOjE3MDk4MjA3MTB9.sZz86FBm4JOFlGv-uQdvK-4WFlemOLlvP9FOJT1k65g
 export default routerApi

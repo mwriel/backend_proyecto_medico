@@ -21,7 +21,7 @@ router.post('/', async (req,res,next) => {
     next(error)
     }
     
-})//post /monster
+})//post /users
 router.get('/', 
 passport.authenticate('jwt',{session: false}),
 async (req,res,next)=>{
