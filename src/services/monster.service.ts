@@ -37,6 +37,15 @@ class MonsterService{
         }
         return monster
     }
+    async deleteMonster(monsterId: string) {
+        const monster = await this.findById(monsterId);
+        if (!monster) {
+            throw Boom.notFound('Monster not found');
+        }
+
+        await Monsters.findByIdAndDelete(monsterId);
+    }
+    
 }
 
 

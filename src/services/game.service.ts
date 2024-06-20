@@ -38,6 +38,7 @@ class GameService{
         return game
     }
     async findByName(name:string){
+        
         const game = await Games.findOne({name: name}).catch((error) => {
             console.log('error en coneccion a mongo')
         })
@@ -71,6 +72,32 @@ class GameService{
         await game.save();
 
         return game;
+    }
+
+    async removeMonsterFromGame(gameName: string, monsterName: string) {
+        const game = await this.findByName(gameName);
+        if (!game) {
+            throw Boom.notFound('Game not found');
+        }
+
+        const monster = await monsterService.findByName(monsterName);
+        if (!monster) {
+            throw Boom.notFound('Monster not found');
+        }
+
+        game.monster = game.monster.filter(monsterId => monsterId.toString() !== monster._id.toString());
+        await game.save();
+
+        return game;
+    }
+
+    async deleteGame(gameId: string) {
+        const game = await this.findById(gameId);
+        if (!game) {
+            throw Boom.notFound('Game not found');
+        }
+
+        await Games.findByIdAndDelete(gameId);
     }
 }
 

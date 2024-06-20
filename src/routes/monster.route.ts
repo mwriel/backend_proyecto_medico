@@ -59,4 +59,15 @@ async (req,res,next)=>{
     }
 })//get qyery /monsters/?name= 'name'
 
+router.delete('/:id', 
+passport.authenticate('jwt', { session: false }),
+async (req, res, next) => {
+    try {
+        await service.deleteMonster(req.params.id);
+        res.status(204).end();
+    } catch (error) {
+        next(error);
+    }
+});
+
 export default router

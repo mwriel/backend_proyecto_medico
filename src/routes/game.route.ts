@@ -35,7 +35,13 @@ router.put('/addMonster/',
         res.status(201).json(modedGame)
     })//update
 
-
+    router.put('/removeMonster', 
+        passport.authenticate('jwt', { session: false }),
+        async (req: UserRequestType, res) => {
+            const input: GameInput = req.body;
+            const modedGame = await service.removeMonsterFromGame(input.game as string, input.monster as string);
+            res.status(201).json(modedGame);
+        });
 
 
 
@@ -79,19 +85,16 @@ router.get('/name/:game',
             next(error);
         }
     })
-router.get('/noUsar/', 
-passport.authenticate('jwt',{session: false}),
-async (req,res,next)=>{
-    console.log('name finding')
-    const input: GameInput =req.body;
-    console.log(input.game)
-    try{
-        const game= await service.findByName(req.query.game as string)
-        res.status(200).json(game)
-    }catch(error){
-        next(error)
+    router.delete('/:id', 
+        passport.authenticate('jwt', { session: false }),
+        async (req, res, next) => {
+            try {
+                await service.deleteGame(req.params.id);
+                res.status(204).end();
+            } catch (error) {
+                next(error);
+            }
+        });
 
-    }
-})//get name
 
 export default router
