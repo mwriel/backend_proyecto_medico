@@ -46,6 +46,18 @@ class MonsterService{
         await Monsters.findByIdAndDelete(monsterId);
     }
     
+    async updateMonster(monsterId: string, updatedMonster: Monster) {
+        const existingMonster = await this.findById(monsterId);
+        if (!existingMonster) {
+            throw Boom.notFound('Monstruo no encontrado');
+        }
+
+        const updated = await Monsters.findByIdAndUpdate(monsterId, updatedMonster, { new: true });
+        if (!updated) {
+            throw Boom.badRequest('No se pudo actualizar el monstruo');
+        }
+        return updated;
+    }
 }
 
 

@@ -70,4 +70,15 @@ async (req, res, next) => {
     }
 });
 
+router.patch('/:id', passport.authenticate('jwt', { session: false }), async (req: UserRequestType, res) => {
+    try {
+        const { id } = req.params;
+        const updatedMonster = await service.updateMonster(id, req.body as Monster);
+        res.status(200).json(updatedMonster);
+    } catch (error) {
+        console.error("Error al actualizar el monstruo:", error);
+        res.status(500).json({ error: "Error al actualizar el monstruo" });
+    }
+});
+
 export default router
