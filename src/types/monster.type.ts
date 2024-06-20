@@ -5,8 +5,8 @@ import { Game } from "./game.type"
 export type Monster = {
     id?: String
     name: String
-    mostWeak: String
-    lessWeak?: String
+    weakTo: String[]
+    resistantTo?: String[]
     size: Number
     body: String
 

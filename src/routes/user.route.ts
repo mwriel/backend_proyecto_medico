@@ -1,6 +1,6 @@
 import express from "express"
 import UserService from '../services/user.service'
-import { User,ToClientUser } from '../types/user.type'
+import { User,ToClientUser,UserModel } from '../types/user.type'
 import Boom from "@hapi/boom"
 import passport from 'passport'
 const router= express.Router()
@@ -12,7 +12,7 @@ router.post('/', async (req,res,next) => {
         const user: User =req.body
         console.log('usuario',user)
         if(!user.email ||!user.name || !user.password ||!user.phone){
-            throw Boom.badRequest()
+            throw Boom.badRequest("faltan campos")
         }
         const newUser = await service.create(user)
         

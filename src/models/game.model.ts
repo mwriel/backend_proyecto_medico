@@ -16,11 +16,11 @@ const Games = new Schema< Game, GameModel>({
         required: true,
         trim: true
     },
-    monster:{
+    monster:[{
         type: Schema.Types.ObjectId,
         ref: MONSTER_REFERENCE
         
-    }
+    }]
 })
 
 export default model(GAME_REFERENCE, Games)

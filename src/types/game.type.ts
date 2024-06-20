@@ -6,6 +6,10 @@ export type Game = {
     id?: String
     name: String
     gen: Number
-    monster: Monster
+    monster?: Monster[]
 }
 export type GameModel = Model<Game>
+export type GameInput={
+    game:String,
+    monster:String
+}

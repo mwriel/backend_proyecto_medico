@@ -10,17 +10,17 @@ const Monsters = new Schema< Monster, MonsterModel>({
         index: true,
         trim: true
     },
-    mostWeak: {
+    weakTo: [{
         type: String,
         required: true,
         trim: true
 
-    },
-    lessWeak: {
+    }],
+    resistantTo: [{
         type: String,
         required: false,
         trim: true
-    },
+    }],
     size: {
         type: Number,
         required: true,
