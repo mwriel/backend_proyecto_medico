@@ -238,5 +238,4 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/node,macos,windows,linux,visualstudiocode,dotenv
 # volumenes docker
-.volumes/
 volumes/

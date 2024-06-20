@@ -10,6 +10,7 @@ router.post('/',
 passport.authenticate('jwt',{session: false}),
 async (req: UserRequestType,res) => {
     //const monster=req.query.monster as string
+    //const monster=req.query.monster as string
     const {user}=req
     console.log('usuario sacado del request')
         console.log(user)
@@ -33,6 +34,9 @@ router.put('/addMonster/',
     
         res.status(201).json(modedGame)
     })//update
+
+
+
 
 
 router.get('/', 
@@ -79,6 +83,8 @@ router.get('/noUsar/',
 passport.authenticate('jwt',{session: false}),
 async (req,res,next)=>{
     console.log('name finding')
+    const input: GameInput =req.body;
+    console.log(input.game)
     try{
         const game= await service.findByName(req.query.game as string)
         res.status(200).json(game)
