@@ -5,10 +5,12 @@ import { UserRequestType as RequestType } from '../types/user.type'
 import jwt from 'jsonwebtoken'
 import { config } from '../config/config'
 
+import pool from "../db"
+
 
 
 const router = express.Router()
-const service = new UserService()
+const service = new UserService(pool)
 
 router.post(
   '/login',

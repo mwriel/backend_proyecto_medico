@@ -1,61 +1,83 @@
-import Users from "../models/user.model"
-import { User,UserModel } from "../types/user.type"
-import boom from "@hapi/boom"
-import bcrypt from 'bcrypt'
+import { UserRepository } from '../repositories/user.repository';
+import { User, ToClientUser, CreateUserInput } from '../types/user.type';
+import boom from '@hapi/boom';
+import bcrypt from 'bcrypt';
+import mysql from 'mysql2/promise';
+//import { UserModel } from '../models/user.model';
 
-class UserService{
-    async create(user: User){
-        const newUser=await Users.create({
-            ...user, 
-            //hashed password
-            password: await bcrypt.hash(user.password,10)
-        }).catch((error) => {
-            console.log('couldn\'n create user',error)
-        })
-        if (!newUser) {
-            throw boom.badRequest('Could not create user')
-        }
-        
-        return newUser
+class UserService {
+    private users: UserRepository;
+
+    constructor(pool: mysql.Pool) {
+        this.users = new UserRepository(pool);
     }
-    async findAll(){
-        
-        const users = await Users.find().catch((error) => {
-            console.log('error while conecting to mongo',error)
-        })
-        if(!users[0]){
-            throw boom.notFound('there are no users ')
-        }
-        return users
+
+    async create(userInput: CreateUserInput): Promise<User> {
+        const hashedPassword = await bcrypt.hash(userInput.password, 10);
+        const newUser = await this.users.create({
+            email: userInput.email,
+            password_hash: hashedPassword,
+            rol: userInput.rol,
+            nombre: userInput.nombre,
+            apellidos: userInput.apellidos,
+            telefono: userInput.telefono ?? null,
+            acepto_terminos: userInput.acepto_terminos,
+        });
+        return newUser;
     }
-    async findByEmail(email: string){
-        const user = await Users.findOne({email:email}).catch((error) => {
-            console.log('error retirando info del usuario')
-        })
-        if(!user){
-            throw boom.notFound('usuario no encontrado')
-        }
-        return user
+    
+
+    async findAll(): Promise<ToClientUser[]> {
+        const users = await this.users.findAll();
+        return users.map(user => ({
+            id: user.id,
+            nombre: user.nombre,
+            email: user.email,
+            telefono: user.telefono,
+            rol: user.rol,
+            apellidos: user.apellidos
+        }));
     }
-    async findById(id:string){
-        const user = await Users.findById(id).catch((error) => {
-            console.log('error en coneccion a mongo')
-        })
-        if(!user){
-            throw boom.notFound('usuario no encontrado')
+
+    async findByEmail(email: string): Promise<User> {
+        const user = await this.users.findByEmail(email);
+        if (!user) {
+            throw boom.notFound('Usuario no encontrado');
         }
-        return user
+        return user;
     }
-    async findByName(name:string){
-        const user = await Users.findOne({name: name}).catch((error) => {
-            console.log('error en coneccion a mongo')
-        })
-        if(!user){
-            throw boom.notFound('usuario no encontrado')
+
+    async findById(id: string): Promise<User> {
+        const user = await this.users.findById(parseInt(id));
+        if (!user) {
+            throw boom.notFound('Usuario no encontrado');
         }
-        return user
+        return user;
+    }
+
+    async findByName(nombre: string): Promise<User> {
+        const user = await this.users.findByName(nombre);
+        if (!user) {
+            throw boom.notFound('Usuario no encontrado');
+        }
+        return user;
+    }
+
+    async update(id: string, user: Partial<User>): Promise<User> {
+        const updatedUser = await this.users.update(parseInt(id), user);
+        if (!updatedUser) {
+            throw boom.notFound('Usuario no encontrado');
+        }
+        return updatedUser;
+    }
+
+    async delete(id: string): Promise<boolean> {
+        const success = await this.users.delete(parseInt(id));
+        if (!success) {
+            throw boom.notFound('Usuario no encontrado');
+        }
+        return success;
     }
 }
 
-
-export default UserService
+export default UserService;

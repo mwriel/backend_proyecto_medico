@@ -1,22 +1,29 @@
-version: '3'
 
 services:
-  mongo:
-    image: mongo:latest
-    container_name: mongo
-    hostname: host-mongo
-    ports: 
-      - "27017:27017"
-    volumes:
-      - ./volumes/mongo-db:/mongo-bd-web-2/
-      - ./volumes/mongo-exprt:/data/db
-  mongo-express:
-    image: mongo-express:1.0.0-alpha
-    container_name: expresMongo
+  db:
+    build: .
+    container_name: my_sql_container
     environment:
-      ME_CONFIG_MONGODB_SERVER: 'mongo'
-      ME_CONFIG_MONGODB_PORT: '27017'
-    links:
-      - mongo    
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: Sistema_Medico
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypass
     ports:
-      - "8081:8081"
+      - "3306:3306"
+    volumes:
+      # Persistencia de datos (base de datos)
+      - ./volumes/sql/sqlData:/var/lib/mysql
+    restart: unless-stopped
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: my_phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: rootpass
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    restart: unless-stopped
