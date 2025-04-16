@@ -17,7 +17,7 @@ const LocalStrategy = new Strategy(options, async (email, password, next) => {
       
       const isMatch = await bcrypt.compare(password, user.password_hash)
       
-      delete user.password
+      delete user.password_hash
       if (isMatch) {
         
         next(null, user)

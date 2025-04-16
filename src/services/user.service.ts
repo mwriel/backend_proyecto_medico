@@ -15,6 +15,7 @@ class UserService {
     async create(userInput: CreateUserInput): Promise<User> {
         const hashedPassword = await bcrypt.hash(userInput.password, 10);
         const newUser = await this.users.create({
+            id:userInput.id,
             email: userInput.email,
             password_hash: hashedPassword,
             rol: userInput.rol,

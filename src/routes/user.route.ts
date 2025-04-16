@@ -4,7 +4,8 @@ import { User,ToClientUser ,CreateUserInput} from '../types/user.type'
 import Boom from "@hapi/boom"
 import passport from 'passport'
 import pool from "../db"
-//import { UserModel } from "../models/user.model"
+import { restrictTo } from "../middlewares/restrict.handler"
+//import {UserModel} from "../models/user.model"
 const router= express.Router()
 
 const service=new UserService(pool)
@@ -19,7 +20,7 @@ router.post('/', async (req,res,next) => {
             throw Boom.badRequest("faltan campos")
         }
         const newUser = await service.create(user)
-        
+        console.log(newUser.id)
         res.status(201).json(newUser)//{user: newUser.toClient()}
     }catch(error){
     next(error)
@@ -27,13 +28,14 @@ router.post('/', async (req,res,next) => {
     
 })//post /users
 router.get('/', 
-//passport.authenticate('jwt',{session: false}),
+passport.authenticate('jwt',{session: false}),
+restrictTo(['admin', 'medico']),
 async (req,res,next)=>{
     console.log('email finding')
     try{
         const {email}= req.query
         const user = await service.findByEmail(email as string)
-        const toClient= {name:user.nombre,email:user.email,phone:user.telefono}
+        //const toClient= {name:user.nombre,email:user.email,phone:user.telefono}
         res.status(200).json(user)//{user: user.toClient()}
     }catch(error){
         next(error)

@@ -16,7 +16,9 @@ export class UserRepository {
     async findByEmail(email: string): Promise<User | null> {
         const [rows] = await this.pool.query('SELECT * FROM usuario WHERE email = ?', [email]);
         if (Array.isArray(rows) && rows.length === 0) return null;
+        console.log(rows[0])
         return rows[0] as User;
+        
     }
 
     async findById(id: number): Promise<User | null> {
@@ -31,10 +33,11 @@ export class UserRepository {
         return rows[0] as User;
     }
 
-    async create(user: Omit<User, 'id' | 'fecha_registro'>): Promise<User> {
+    async create(user: Omit<User, 'fecha_registro'>): Promise<User> {
         const [result] = await this.pool.query(
-            'INSERT INTO usuario (email, password_hash, rol, nombre, apellidos, telefono, acepto_terminos) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            'INSERT INTO usuario (id,email, password_hash, rol, nombre, apellidos, telefono, acepto_terminos) VALUES (?,?, ?, ?, ?, ?, ?, ?)',
             [
+                user.id,
                 user.email,
                 user.password_hash,
                 user.rol,
