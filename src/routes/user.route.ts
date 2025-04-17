@@ -40,4 +40,17 @@ async (req,res,next)=>{
 
     }
 })
+// Implementé esta función solo para probar la conexión a la base de datos
+// router.get('/all',
+//     async (req,res,next)=>{
+//         console.log('all users')
+//         try{
+//             const users = await service.findAll()
+//             const toClient= users.map((user:User) => ({name:user.nombre,email:user.email,phone:user.telefono}))
+//             res.status(200).json(toClient)//{user: user.toClient()}
+//         }catch(error){
+//             next(error)
+//         }
+//     }
+// )
 export default router
