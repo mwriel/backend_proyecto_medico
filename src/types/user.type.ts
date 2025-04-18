@@ -20,7 +20,7 @@ export type User = ToClientUser & {
     password_hash: string
     fecha_registro?: Date //de momento lo dejamos con ? para despues ver como parsear a fecha datetime
     acepto_terminos:Boolean
-    password?: string// sin hashear para las estrategias
+    
 }
 
 export type ToClientUser = {
@@ -40,6 +40,7 @@ export type UserMethods = {
     toClient: () => ToClientUser
 }
 export type CreateUserInput = {
+    id: Number
     email: string;
     password: string;
     rol: 'admin' | 'medico' | 'paciente';

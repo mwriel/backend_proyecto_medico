@@ -1,49 +1,26 @@
-import { Schema, model } from "mongoose"
-import {User, UserMethods, UserModel} from '../types/user.type'
+
+import {User, UserMethods,ToClientUser} from '../types/user.type'
 import { PHONE_NUMBER_REGEX, EMAIL_REGEX } from "../utils/constants"
-const Users = new Schema<User,UserModel,UserMethods>({
-    name:{
-        type: String,
-        required: true,
-        trim: true
-    },
-    password:{
-        type: String,
-        required: true,
-        trim: true
-    },
-    email:{
-        type: String,
-        required: true,
-        unique: true,
-        index: true,
-        trim: true,
-        match: [EMAIL_REGEX,'no es valido el email']
-    },
-    phone:{
-        type: String,
-        required: true,
-        trim: true,
-        match: [PHONE_NUMBER_REGEX,'telefono invalido, introduzca correctamente']
-    },
-    createdAt:{
-        type:Date,
-        default:()=> Date.now()
-    },
-    lastModified:{
-        type: Date,
-        default: ()=> Date.now()
-    }
-})
 
-Users.methods.toClient = function () {
-    return {
-      id: this._id as unknown as string,
-      name: this.name,
-      email: this.email,
-      phone: this.phone
-      
-    }
-  }
 
-export default model('User', Users)
+export class UserModel {
+    id: number;
+    email: string;
+    nombre: string
+    apellidos: string
+    telefono: string
+    rol:'admin'|'medico'|'paciente'
+    password_hash: string
+    fecha_registro?: Date //de momento lo dejamos con ? para despues ver como parsear a fecha datetime
+    acepto_terminos:Boolean
+    toClient(): ToClientUser {
+        return {
+            id: this.id,
+            email: this.email,
+            nombre: this.nombre, 
+            telefono: this.telefono, 
+            rol: this.rol,
+            apellidos: this.apellidos
+        };
+    }
+}
