@@ -15,7 +15,7 @@ class UserService {
     async create(userInput: CreateUserInput): Promise<User> {
         const hashedPassword = await bcrypt.hash(userInput.password, 10);
         const newUser = await this.users.create({
-            id:userInput.id,
+            id: userInput.id,
             email: userInput.email,
             password_hash: hashedPassword,
             rol: userInput.rol,
@@ -62,6 +62,35 @@ class UserService {
             throw boom.notFound('Usuario no encontrado');
         }
         return user;
+    }
+
+    async findByRol(rol: string): Promise<ToClientUser[]> {
+        const users = await this.users.findByRol(rol);
+        // console.log('User: ', users);
+        return users.map(user => ({
+            id: user.id,
+            nombre: user.nombre,
+            email: user.email,
+            telefono: user.telefono,
+            rol: user.rol,
+            apellidos: user.apellidos,
+            registro: user.fecha_registro
+        }));
+    }
+    // req.app.locals.db.query('SELECT * FROM medico WHERE usuario_id = ?', [id as string])
+    async findByMedico(rol: string): Promise<ToClientUser[]> {
+        const users = await this.users.findByMedico(rol);
+        // console.log('User: ', users);
+        // return users.map(user => ({
+        //     id: user.id,
+        //     nombre: user.nombre,
+        //     email: user.email,
+        //     telefono: user.telefono,
+        //     rol: user.rol,
+        //     apellidos: user.apellidos,
+        //     registro: user.fecha_registro
+        // }));
+        return users;
     }
 
     async update(id: string, user: Partial<User>): Promise<User> {

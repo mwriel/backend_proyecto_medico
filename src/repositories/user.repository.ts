@@ -33,6 +33,18 @@ export class UserRepository {
         return rows[0] as User;
     }
 
+    async findByRol(rol: string): Promise<User[]> {
+        const [rows] = await this.pool.query('SELECT id, email, rol, nombre, apellidos, telefono, acepto_terminos, DATE_FORMAT(fecha_registro, "%Y-%m-%d %H:%i:%s") AS fecha_registro FROM usuario WHERE rol = ?', [rol]);
+        // console.log('User: ', rows as User[]);
+        return rows as User[];
+    }
+    
+    async findByMedico(id: string): Promise<User[]> {
+        const [rows] = await this.pool.query('SELECT id, cedula_profesional, especialidad, dias_laborables, horario_laboral, direccion_consultorio, coordenadas_consultorio, cedula_validada  FROM medico WHERE usuario_id = ?', [id]);
+        // console.log('User: ', rows as User[]);
+        return rows as User[];
+    }
+
     async create(user: Omit<User, 'fecha_registro'>): Promise<User> {
         const [result] = await this.pool.query(
             'INSERT INTO usuario (id,email, password_hash, rol, nombre, apellidos, telefono, acepto_terminos) VALUES (?,?, ?, ?, ?, ?, ?, ?)',
@@ -49,8 +61,8 @@ export class UserRepository {
         );
         const insertId = (result as mysql.ResultSetHeader).insertId;
         return {
-            id: insertId,
             ...user,
+            id: insertId,
             fecha_registro: new Date() // Aproximación, ya que fecha_registro es DEFAULT_GENERATED
         };
     }
