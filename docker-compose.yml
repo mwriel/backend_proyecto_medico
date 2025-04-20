@@ -2,7 +2,7 @@
 services:
   db:
     build: .
-    container_name: my_sql_container
+    container_name: sql_medico
     environment:
       MYSQL_ROOT_PASSWORD: rootpass
       MYSQL_DATABASE: Sistema_Medico
