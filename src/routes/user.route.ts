@@ -55,22 +55,38 @@ router.get('/rol', async (req, res, next) => {
 });
 router.get('/medico', async (req, res, next) => {
     try {
-      const { id } = req.query
-      // console.log(id as string)
-      const [rows] = await service.findByMedico(id as string)
-      res.status(200).json(rows);
+        const { id } = req.query
+        // console.log(id as string)
+        const [rows] = await service.findByMedico(id as string)
+        res.status(200).json(rows);
     } catch (error) {
-      next(error);
+        next(error);
     }
-  });
+});
+
+router.delete('/delete/:id',
+    passport.authenticate('jwt', { session: false }),
+    // restrictTo(['admin']), // Solo los administradores pueden eliminar usuarios
+    async (req, res, next) => {
+        try {
+            const { id } = req.params;
+            const success = await service.delete(id);
+
+            res.status(200).json({ message: 'Usuario eliminado correctamente.' });
+        } catch (error) {
+            next(error);
+        }
+    }
+);
+
 // Implementé esta función solo para probar la conexión a la base de datos
 router.get('/all',
-    async (req,res,next)=>{
+    async (req, res, next) => {
         console.log('all users')
-        try{
+        try {
             const users = await service.findAll()
             res.status(200).json(users)//{user: user.toClient()}
-        }catch(error){
+        } catch (error) {
             next(error)
         }
     }
